@@ -1,6 +1,5 @@
 Setup:
 
-- Zed integration doesn't seem to be working with Void
 - CI integration
 - Styling solution
 - agent Skills for Planning and executing

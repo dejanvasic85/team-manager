@@ -100,18 +100,6 @@ Pre-commit hooks are configured through Vite+ staged checks; ensure any auto-fix
 - **For custom script behavior:** use `vp run <script>`
 - **Bypassing checks before handoff:** always run quality gates from this file
 
-## CI Integration
-
-For GitHub Actions, consider [`voidzero-dev/setup-vp`](https://github.com/voidzero-dev/setup-vp) to simplify setup and caching.
-
-```yaml
-- uses: voidzero-dev/setup-vp@v1
-  with:
-    cache: true
-- run: vp check
-- run: vp test
-```
-
 ## Review Checklist for Agents
 
 - [ ] Run `vp install` after pulling remote changes and before starting work.

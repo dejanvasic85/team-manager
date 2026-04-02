@@ -7,6 +7,8 @@ import viteReact from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import { cloudflare } from "@cloudflare/vite-plugin";
 
+const isTest = process.env.VITEST === "true";
+
 const config = defineConfig({
   server: {
     port: 4004,
@@ -23,11 +25,11 @@ const config = defineConfig({
   lint: { options: { typeAware: true, typeCheck: true } },
   plugins: [
     devtools(),
-    cloudflare({ viteEnvironment: { name: "ssr" } }),
+    !isTest && cloudflare({ viteEnvironment: { name: "ssr" } }),
     tailwindcss(),
     tanstackStart(),
     viteReact(),
-  ],
+  ].filter(Boolean),
 });
 
 export default config;
