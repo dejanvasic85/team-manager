@@ -1,77 +1,108 @@
-<!--VITE PLUS START-->
+# AGENTS Guide
 
-# Using Vite+, the Unified Toolchain for the Web
+This file defines the baseline engineering conventions for agents working in this repository.
 
-This project is using Vite+, a unified toolchain built on top of Vite, Rolldown, Vitest, tsdown, Oxlint, Oxfmt, and Vite Task. Vite+ wraps runtime management, package management, and frontend tooling in a single global CLI called `vp`. Vite+ is distinct from Vite, but it invokes Vite through `vp dev` and `vp build`.
+## Tech Stack
 
-## Vite+ Workflow
+- Vite+ unified toolchain (`vp`) for install, dev, build, lint, format, and test workflows
+- TanStack Start + React 19 + TypeScript (strict mode)
+- Tailwind CSS 4 + `@tailwindcss/typography`
+- Drizzle ORM + better-sqlite3
+- Better Auth
+- Cloudflare Vite plugin + Wrangler for deployment/runtime integration
+- Zod for runtime config validation
 
-`vp` is a global binary that handles the full development lifecycle. Run `vp help` to print a list of commands and `vp <command> --help` for information about a specific command.
+## Vite+ Workflow (Required)
 
-### Start
+Use `vp` as the default interface for local tooling.
 
-- create - Create a new project from a template
-- migrate - Migrate an existing project to Vite+
-- config - Configure hooks and agent integration
-- staged - Run linters on staged files
-- install (`i`) - Install dependencies
-- env - Manage Node.js versions
+- `vp dev`- local development unless a script-specific setup is required
+- `vp check`- lint + format + type checks
+- `vp test`- test execution
+- `vp fmt`- formatting code
+- `vp lint`- formatting code
+- `vp build`- production builds
+- `vp run <script>`- when you need a custom `package.json` script
 
-### Develop
-
-- dev - Run the development server
-- check - Run format, lint, and TypeScript type checks
-- lint - Lint code
-- fmt - Format code
-- test - Run tests
+Avoid bypassing Vite+ wrappers for core workflows.
 
 ### Execute
 
-- run - Run monorepo tasks
-- exec - Execute a command from local `node_modules/.bin`
-- dlx - Execute a package binary without installing it as a dependency
-- cache - Manage the task cache
-
-### Build
-
-- build - Build for production
-- pack - Build libraries
-- preview - Preview production build
+- `vp exec` - Execute a command from local `node_modules/.bin`
+- `vp dlx` - Execute a package binary without installing it as a dependency
+- `vp cache` - Manage the task cache
 
 ### Manage Dependencies
 
-Vite+ automatically detects and wraps the underlying package manager such as pnpm, npm, or Yarn through the `packageManager` field in `package.json` or package manager-specific lockfiles.
+Vite+ automatically detects and wraps the underlying package manager through `packageManager` in `package.json` and lockfiles.
 
-- add - Add packages to dependencies
-- remove (`rm`, `un`, `uninstall`) - Remove packages from dependencies
-- update (`up`) - Update packages to latest versions
-- dedupe - Deduplicate dependencies
-- outdated - Check for outdated packages
-- list (`ls`) - List installed packages
-- why (`explain`) - Show why a package is installed
-- info (`view`, `show`) - View package information from the registry
-- link (`ln`) / unlink - Manage local package links
-- pm - Forward a command to the package manager
+- `vp add` - Add packages to dependencies
+- `vp remove` (`rm`, `un`, `uninstall`) - Remove packages from dependencies
+- `vp update` (`up`) - Update packages to latest versions
+- `vp dedupe` - Deduplicate dependencies
+- `vp outdated` - Check for outdated packages
+- `vp list` (`ls`) - List installed packages
+- `vp why` (`explain`) - Show why a package is installed
+- `vp info` (`view`, `show`) - View package information from the registry
+- `vp link` (`ln`) / unlink - Manage local package links
+- `vp pm` - Forward a command to the package manager
 
-### Maintain
+## Code Style
 
-- upgrade - Update `vp` itself to the latest version
+- Keep code DRY; extract repeated logic into named functions/constants
+- Prefer small, composable functions over large inline blocks
+- Prefer `switch` over long `if/else` chains when branching on a single discriminator
+- Avoid magic numbers/strings; introduce well-named constants
+- Use camelCase naming for constants (no SCREAMING_CASE)
+- Object constants should end with `Value` suffix (for example: `defaultConfigValue`)
+- Avoid unnecessary comments; add short comments only for non-obvious intent
+- Keep modules/components reasonably small; split when complexity grows
 
-These commands map to their corresponding tools. For example, `vp dev --port 3000` runs Vite's dev server and works the same as Vite. `vp test` runs JavaScript tests through the bundled Vitest. The version of all tools can be checked using `vp --version`. This is useful when researching documentation, features, and bugs.
+### File/Module Naming
+
+- Non-component TypeScript module file names should be camelCase (for example: `authService.ts`)
+- Co-locate types with components/modules when practical
+
+## React and UI Conventions
+
+- Use React + TypeScript with explicit prop types in the same file
+- React component file names should be PascalCase (for example: `HeaderUser.tsx`)
+- Do not use inline object types in component parameters; declare a `type`/`interface` first
+- Keep constants outside component bodies unless they must capture runtime state
+- Prefer Tailwind utility classes over inline `style` props
+- Name event handlers with `handle` prefix (for example: `handleSubmit`)
+- Use accessible, semantic HTML and keyboard-friendly interactions by default
+
+## Data, Config, and Validation
+
+- Centralize environment variable parsing/validation through Zod-based config modules
+- Keep data access logic grouped by domain; avoid scattering query logic through UI layers
+- Use explicit mapping/transform steps where boundaries between external/internal shapes exist
+
+## Testing and Quality Gates
+
+At minimum before opening or updating a PR:
+
+1. `vp check`
+2. `vp build` for larger or riskier changes
+
+Pre-commit hooks are configured through Vite+ staged checks; ensure any auto-fixes are included in commits.
+
+## Dependency Management
+
+- Check for current stable package versions before adding dependencies
+- Avoid deprecated packages/APIs when alternatives exist
 
 ## Common Pitfalls
 
-- **Using the package manager directly:** Do not use pnpm, npm, or Yarn directly. Vite+ can handle all package manager operations.
-- **Always use Vite commands to run tools:** Don't attempt to run `vp vitest` or `vp oxlint`. They do not exist. Use `vp test` and `vp lint` instead.
-- **Running scripts:** Vite+ built-in commands (`vp dev`, `vp build`, `vp test`, etc.) always run the Vite+ built-in tool, not any `package.json` script of the same name. To run a custom script that shares a name with a built-in command, use `vp run <script>`. For example, if you have a custom `dev` script that runs multiple services concurrently, run it with `vp run dev`, not `vp dev` (which always starts Vite's dev server).
-- **Do not install Vitest, Oxlint, Oxfmt, or tsdown directly:** Vite+ wraps these tools. They must not be installed directly. You cannot upgrade these tools by installing their latest versions. Always use Vite+ commands.
-- **Use Vite+ wrappers for one-off binaries:** Use `vp dlx` instead of package-manager-specific `dlx`/`npx` commands.
-- **Import JavaScript modules from `vite-plus`:** Instead of importing from `vite` or `vitest`, all modules should be imported from the project's `vite-plus` dependency. For example, `import { defineConfig } from 'vite-plus';` or `import { expect, test, vi } from 'vite-plus/test';`. You must not install `vitest` to import test utilities.
-- **Type-Aware Linting:** There is no need to install `oxlint-tsgolint`, `vp lint --type-aware` works out of the box.
+- **Using package managers directly for routine workflows:** prefer `vp`
+- **Assuming built-in command behavior follows scripts:** `vp dev` runs Vite+, not script aliases
+- **For custom script behavior:** use `vp run <script>`
+- **Bypassing checks before handoff:** always run quality gates from this file
 
 ## CI Integration
 
-For GitHub Actions, consider using [`voidzero-dev/setup-vp`](https://github.com/voidzero-dev/setup-vp) to replace separate `actions/setup-node`, package-manager setup, cache, and install steps with a single action.
+For GitHub Actions, consider [`voidzero-dev/setup-vp`](https://github.com/voidzero-dev/setup-vp) to simplify setup and caching.
 
 ```yaml
 - uses: voidzero-dev/setup-vp@v1
@@ -83,6 +114,8 @@ For GitHub Actions, consider using [`voidzero-dev/setup-vp`](https://github.com/
 
 ## Review Checklist for Agents
 
-- [ ] Run `vp install` after pulling remote changes and before getting started.
-- [ ] Run `vp check` and `vp test` to validate changes.
-<!--VITE PLUS END-->
+- [ ] Run `vp install` after pulling remote changes and before starting work.
+- [ ] Run `vp check` and `vp test` before final handoff.
+- [ ] Run `vp build` when changes affect build/runtime boundaries.
+- [ ] Prefer alias imports (`#/*`, `@/*`) over long relative paths.
+- [ ] Keep environment variables validated through Zod config.
