@@ -8,6 +8,9 @@ import tailwindcss from "@tailwindcss/vite";
 import { cloudflare } from "@cloudflare/vite-plugin";
 
 const config = defineConfig({
+  server: {
+    port: 4004,
+  },
   resolve: {
     tsconfigPaths: true,
   },
