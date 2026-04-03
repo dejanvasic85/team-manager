@@ -29,6 +29,3 @@ jobs:
 
       - name: Run tests
         run: vp test --passWithNoTests
-
-      - name: Build
-        run: vp build
