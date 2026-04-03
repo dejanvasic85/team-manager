@@ -1,7 +1,7 @@
-name: CI
+name: Deploy Production
 
 on:
-  pull_request:
+  push:
     branches:
       - main
 
@@ -9,9 +9,10 @@ permissions:
   contents: read
 
 jobs:
-  validate:
-    name: Validate
+  deploy:
+    name: Deploy to prod
     runs-on: ubuntu-latest
+    environment: production
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -24,11 +25,11 @@ jobs:
       - name: Install dependencies
         run: vp install --frozen-lockfile
 
-      - name: Run checks
-        run: vp check
-
-      - name: Run tests
-        run: vp test --passWithNoTests
-
       - name: Build
-        run: vp build
+        run: vp run build
+
+      - name: Deploy
+        run: vp exec wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

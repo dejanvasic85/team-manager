@@ -1,7 +1,7 @@
 TODO:
 
 - [x] CI integration
-- [ ] Deploy to cloudflare
+- [x] Deploy to cloudflare
 - [ ] Create first feature
 - [ ] Database
 - [ ] Create secured page behind login
