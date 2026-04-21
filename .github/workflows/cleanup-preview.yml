@@ -29,6 +29,7 @@ jobs:
           branch_slug="${branch_slug:0:24}"
           worker_name="app-pr-${PR_NUMBER}-${branch_slug}"
           worker_name="${worker_name:0:63}"
+          worker_name=$(printf '%s' "$worker_name" | sed -E 's/-+$//')
           echo "worker_name=$worker_name" >> "$GITHUB_OUTPUT"
 
       - name: Delete preview worker
