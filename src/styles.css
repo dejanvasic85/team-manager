@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap");
+@import "https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap";
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
@@ -37,6 +37,7 @@
   --text-primary: var(--sea-ink);
   --text-secondary: var(--sea-ink-soft);
   --text-accent: var(--lagoon-deep);
+  --text-link-hover: color-mix(in oklab, var(--lagoon-deep) 82%, var(--sea-ink) 18%);
   --text-kicker: var(--kicker);
 
   --bg-canvas: var(--bg-base);
@@ -191,7 +192,7 @@ a:not(.button-neutral):not(.button-cta):not(.button-ghost) {
 }
 
 a:not(.button-neutral):not(.button-cta):not(.button-ghost):hover {
-  color: #3d7a52;
+  color: var(--text-link-hover);
 }
 
 code {
