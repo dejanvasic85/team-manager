@@ -2,16 +2,6 @@
 
 This file defines the baseline engineering conventions for agents working in this repository.
 
-## Tech Stack
-
-- Vite+ unified toolchain (`vp`) for install, dev, build, lint, format, and test workflows
-- TanStack Start + React 19 + TypeScript (strict mode)
-- Tailwind CSS 4 + `@tailwindcss/typography`
-- Drizzle ORM + better-sqlite3
-- Better Auth
-- Cloudflare Vite plugin + Wrangler for deployment/runtime integration
-- Zod for runtime config validation
-
 ## Vite+ Workflow (Required)
 
 Use `vp` as the default interface for local tooling.
@@ -63,8 +53,9 @@ Vite+ automatically detects and wraps the underlying package manager through `pa
 - Non-component TypeScript module file names should be camelCase (for example: `authService.ts`)
 - Co-locate types with components/modules when practical
 
-## React and UI Conventions
+## React and UI
 
+- When you make UI changes be sure to use the agent-browser skill to test it out
 - Use React + TypeScript with explicit prop types in the same file
 - React component file names should be PascalCase (for example: `HeaderUser.tsx`)
 - Do not use inline object types in component parameters; declare a `type`/`interface` first

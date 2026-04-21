@@ -2,7 +2,6 @@ import { HeadContent, Scripts, createRootRouteWithContext } from "@tanstack/reac
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { TanStackDevtools } from "@tanstack/react-devtools";
 import Footer from "../components/Footer";
-import Header from "../components/Header";
 
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 
@@ -27,7 +26,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         content: "width=device-width, initial-scale=1",
       },
       {
-        title: "TanStack Start Starter",
+        title: "Team Manager",
       },
     ],
     links: [
@@ -47,8 +46,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
         <HeadContent />
       </head>
-      <body className="font-sans antialiased [overflow-wrap:anywhere] selection:bg-[var(--selection-bg)]">
-        <Header />
+      <body className="flex min-h-screen min-h-[100dvh] flex-col font-sans antialiased [overflow-wrap:anywhere] selection:bg-[var(--selection-bg)]">
         {children}
         <Footer />
         <TanStackDevtools
