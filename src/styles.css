@@ -4,6 +4,13 @@
 
 @theme {
   --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-accent: var(--text-accent);
+  --color-border-subtle: var(--border-subtle);
+  --color-bg-canvas: var(--bg-canvas);
+  --color-bg-surface: var(--bg-surface);
+  --color-bg-surface-strong: var(--bg-surface-strong);
 }
 
 :root {
@@ -26,6 +33,34 @@
   --link-bg-hover: rgba(255, 255, 255, 0.9);
   --hero-a: rgba(79, 184, 178, 0.36);
   --hero-b: rgba(47, 106, 74, 0.2);
+
+  --text-primary: var(--sea-ink);
+  --text-secondary: var(--sea-ink-soft);
+  --text-accent: var(--lagoon-deep);
+  --text-kicker: var(--kicker);
+
+  --bg-canvas: var(--bg-base);
+  --bg-surface: var(--surface);
+  --bg-surface-strong: var(--surface-strong);
+  --bg-header: var(--header-bg);
+  --bg-chip: var(--chip-bg);
+  --bg-link-hover: var(--link-bg-hover);
+
+  --border-subtle: var(--line);
+  --border-chip: var(--chip-line);
+  --selection-bg: rgba(79, 184, 178, 0.24);
+
+  --hero-orb-a: rgba(79, 184, 178, 0.32);
+  --hero-orb-b: rgba(47, 106, 74, 0.18);
+
+  --button-neutral-text: var(--text-primary);
+  --button-neutral-bg: color-mix(in oklab, var(--bg-surface-strong) 82%, white 18%);
+  --button-neutral-bg-hover: color-mix(in oklab, var(--bg-surface-strong) 88%, white 12%);
+  --button-neutral-border: color-mix(in oklab, var(--text-primary) 22%, transparent);
+  --button-neutral-border-hover: color-mix(in oklab, var(--text-primary) 34%, transparent);
+
+  --auth-avatar-bg: color-mix(in oklab, var(--bg-surface-strong) 90%, white 10%);
+  --auth-avatar-text: var(--text-secondary);
 }
 
 :root[data-theme="dark"] {
@@ -86,9 +121,9 @@ body,
 
 body {
   margin: 0;
-  color: var(--sea-ink);
+  color: var(--text-primary);
   font-family: var(--font-sans);
-  background-color: var(--bg-base);
+  background-color: var(--bg-canvas);
   background:
     radial-gradient(1100px 620px at -8% -10%, var(--hero-a), transparent 58%),
     radial-gradient(1050px 620px at 112% -12%, var(--hero-b), transparent 62%),
@@ -97,7 +132,7 @@ body {
       180deg,
       color-mix(in oklab, var(--sand) 68%, white) 0%,
       var(--foam) 44%,
-      var(--bg-base) 100%
+      var(--bg-canvas) 100%
     );
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
@@ -132,7 +167,7 @@ body::after {
 }
 
 a {
-  color: var(--lagoon-deep);
+  color: var(--text-accent);
   text-decoration-color: rgba(50, 143, 151, 0.4);
   text-decoration-thickness: 1px;
   text-underline-offset: 2px;
@@ -144,8 +179,8 @@ a:hover {
 
 code {
   font-size: 0.9em;
-  border: 1px solid var(--line);
-  background: color-mix(in oklab, var(--surface-strong) 82%, white 18%);
+  border: 1px solid var(--border-subtle);
+  background: color-mix(in oklab, var(--bg-surface-strong) 82%, white 18%);
   border-radius: 7px;
   padding: 2px 7px;
 }
@@ -169,8 +204,8 @@ pre code {
 }
 
 .island-shell {
-  border: 1px solid var(--line);
-  background: linear-gradient(165deg, var(--surface-strong), var(--surface));
+  border: 1px solid var(--border-subtle);
+  background: linear-gradient(165deg, var(--bg-surface-strong), var(--bg-surface));
   box-shadow:
     0 1px 0 var(--inset-glint) inset,
     0 22px 44px rgba(30, 90, 72, 0.1),
@@ -181,8 +216,8 @@ pre code {
 .feature-card {
   background: linear-gradient(
     165deg,
-    color-mix(in oklab, var(--surface-strong) 93%, white 7%),
-    var(--surface)
+    color-mix(in oklab, var(--bg-surface-strong) 93%, white 7%),
+    var(--bg-surface)
   );
   box-shadow:
     0 1px 0 var(--inset-glint) inset,
@@ -192,7 +227,7 @@ pre code {
 
 .feature-card:hover {
   transform: translateY(-2px);
-  border-color: color-mix(in oklab, var(--lagoon-deep) 35%, var(--line));
+  border-color: color-mix(in oklab, var(--text-accent) 35%, var(--border-subtle));
 }
 
 button,
@@ -210,7 +245,7 @@ a {
   text-transform: uppercase;
   font-weight: 700;
   font-size: 0.69rem;
-  color: var(--kicker);
+  color: var(--text-kicker);
 }
 
 .nav-link {
@@ -218,7 +253,7 @@ a {
   display: inline-flex;
   align-items: center;
   text-decoration: none;
-  color: var(--sea-ink-soft);
+  color: var(--text-secondary);
 }
 
 .nav-link::after {
@@ -236,7 +271,7 @@ a {
 
 .nav-link:hover,
 .nav-link.is-active {
-  color: var(--sea-ink);
+  color: var(--text-primary);
 }
 
 .nav-link:hover::after,
@@ -251,8 +286,55 @@ a {
 }
 
 .site-footer {
-  border-top: 1px solid var(--line);
-  background: color-mix(in oklab, var(--header-bg) 84%, transparent 16%);
+  border-top: 1px solid var(--border-subtle);
+  background: color-mix(in oklab, var(--bg-header) 84%, transparent 16%);
+}
+
+.chip-shell {
+  border: 1px solid var(--border-chip);
+  background: var(--bg-chip);
+  box-shadow: 0 8px 24px rgba(30, 90, 72, 0.08);
+}
+
+.button-neutral {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--button-neutral-border);
+  background: var(--button-neutral-bg);
+  color: var(--button-neutral-text);
+  text-decoration: none;
+}
+
+.button-neutral:hover {
+  border-color: var(--button-neutral-border-hover);
+  background: var(--button-neutral-bg-hover);
+}
+
+.icon-button {
+  color: var(--text-secondary);
+}
+
+.icon-button:hover {
+  background: var(--bg-link-hover);
+  color: var(--text-primary);
+}
+
+.hero-orb-a {
+  background: radial-gradient(circle, var(--hero-orb-a), transparent 66%);
+}
+
+.hero-orb-b {
+  background: radial-gradient(circle, var(--hero-orb-b), transparent 66%);
+}
+
+.auth-avatar {
+  border: 1px solid var(--border-subtle);
+  background: var(--auth-avatar-bg);
+}
+
+.auth-avatar-text {
+  color: var(--auth-avatar-text);
 }
 
 .rise-in {
