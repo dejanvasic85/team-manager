@@ -11,7 +11,7 @@ export default function Header() {
             to="/"
             className="chip-shell inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm text-[var(--text-primary)] no-underline sm:px-4 sm:py-2"
           >
-            <span className="h-2 w-2 rounded-full bg-[linear-gradient(90deg,#56c6be,#7ed3bf)]" />
+            <span className="h-2 w-2 rounded-full bg-[linear-gradient(90deg,#7cb88a,#8ed4a0)]" />
             TanStack Start
           </Link>
         </h2>
