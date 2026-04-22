@@ -2,6 +2,11 @@
 
 This file defines the baseline engineering conventions for agents working in this repository.
 
+## Project Context
+
+Read `docs/project-context.md` before making any changes.
+It contains the product vision, tech stack, and data model decisions.
+
 ## Vite+ Workflow (Required)
 
 Use `vp` as the default interface for local tooling.
