@@ -16,13 +16,13 @@ function App() {
         </p>
         <div className="flex flex-wrap items-center justify-center gap-3">
           <a
-            href="/demo/better-auth"
+            href="/signup"
             className="button-cta rounded-2xl px-8 py-4 text-base font-semibold transition"
           >
             Get Started
           </a>
           <a
-            href="/demo/better-auth"
+            href="/login"
             className="button-ghost rounded-2xl px-8 py-4 text-base font-medium transition"
           >
             Login
