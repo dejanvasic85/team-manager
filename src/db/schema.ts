@@ -1,34 +1,37 @@
-import { sqliteTable, integer, text } from "drizzle-orm/sqlite-core";
+import { pgTable, serial, text, timestamp, jsonb, integer } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 
-export const teams = sqliteTable("teams", {
-  id: integer({ mode: "number" }).primaryKey({ autoIncrement: true }),
+export const teams = pgTable("teams", {
+  id: serial("id").primaryKey(),
   name: text().notNull(),
   season: text().notNull(),
   ownerId: text("owner_id").notNull(),
-  createdAt: integer("created_at", { mode: "timestamp" }).default(sql`(unixepoch())`),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
 });
 
-export const players = sqliteTable("players", {
-  id: integer({ mode: "number" }).primaryKey({ autoIncrement: true }),
-  teamId: integer("team_id", { mode: "number" }).notNull(),
+export const players = pgTable("players", {
+  id: serial("id").primaryKey(),
+  teamId: integer("team_id").notNull(),
   name: text().notNull(),
   avatarUrl: text("avatar_url"),
-  positions: text({ mode: "json" }).$type<string[]>().default([]),
-  createdAt: integer("created_at", { mode: "timestamp" }).default(sql`(unixepoch())`),
+  positions: jsonb("positions")
+    .$type<string[]>()
+    .default(sql`'[]'::jsonb`)
+    .notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
 });
 
-export const playerContacts = sqliteTable("player_contacts", {
-  id: integer({ mode: "number" }).primaryKey({ autoIncrement: true }),
-  playerId: integer("player_id", { mode: "number" }).notNull(),
+export const playerContacts = pgTable("player_contacts", {
+  id: serial("id").primaryKey(),
+  playerId: integer("player_id").notNull(),
   label: text().notNull(),
   name: text().notNull(),
   phone: text(),
 });
 
-export const playerSkills = sqliteTable("player_skills", {
-  id: integer({ mode: "number" }).primaryKey({ autoIncrement: true }),
-  playerId: integer("player_id", { mode: "number" }).notNull(),
+export const playerSkills = pgTable("player_skills", {
+  id: serial("id").primaryKey(),
+  playerId: integer("player_id").notNull(),
   skill: text().notNull(),
   level: text().notNull(),
 });
