@@ -1,15 +1,10 @@
 import { createServerFn } from "@tanstack/react-start";
 import { eq } from "drizzle-orm";
-import { z } from "zod";
 
 import { db } from "#/db";
 import { teams } from "#/db/schema";
 import { ensureSession } from "#/lib/authFunctions";
-
-const createTeamSchema = z.object({
-  name: z.string().min(1),
-  season: z.string().min(1),
-});
+import { createTeamSchema } from "#/lib/teamValidation";
 
 export const getTeams = createServerFn({ method: "GET" }).handler(async () => {
   const session = await ensureSession();
