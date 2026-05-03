@@ -6,7 +6,10 @@ export const Route = createFileRoute("/_protected")({
   beforeLoad: async ({ location }) => {
     const session = await getSession();
     if (!session) {
-      throw redirect({ to: "/login", search: { redirect: location.href } });
+      throw redirect({
+        to: "/login",
+        search: { redirect: location.pathname + location.searchStr },
+      });
     }
     return { user: session.user };
   },

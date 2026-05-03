@@ -1,7 +1,11 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
+import { useState } from "react";
+import { z } from "zod";
+
 import { getSession } from "#/lib/authFunctions";
 
 export const Route = createFileRoute("/login")({
+  validateSearch: z.object({ redirect: z.string().optional() }),
   beforeLoad: async () => {
     const session = await getSession();
     if (session) {
@@ -34,6 +38,39 @@ function LoginPage() {
 }
 
 function LoginForm() {
+  const { redirect: redirectTo } = Route.useSearch();
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setError(null);
+    setPending(true);
+    const form = e.currentTarget;
+    const email = (form.elements.namedItem("email") as HTMLInputElement).value;
+    const password = (form.elements.namedItem("password") as HTMLInputElement).value;
+
+    try {
+      const { authClient } = await import("#/lib/auth-client");
+      const safeRedirect =
+        redirectTo && redirectTo.startsWith("/") && !redirectTo.startsWith("//")
+          ? redirectTo
+          : "/dashboard";
+      const { error: authError } = await authClient.signIn.email({
+        email,
+        password,
+        callbackURL: safeRedirect,
+      });
+      if (authError) {
+        setError(authError.message ?? "Sign in failed");
+      }
+    } catch {
+      setError("Sign in failed. Please try again.");
+    } finally {
+      setPending(false);
+    }
+  }
+
   return (
     <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
       <div className="flex flex-col gap-1.5">
@@ -82,28 +119,13 @@ function LoginForm() {
       </div>
       <button
         type="submit"
-        className="button-cta mt-2 rounded-lg px-4 py-2.5 text-sm font-semibold"
+        disabled={pending}
+        aria-busy={pending}
+        className="button-cta mt-2 rounded-lg px-4 py-2.5 text-sm font-semibold disabled:opacity-60"
       >
-        Sign in
+        {pending ? "Signing in..." : "Sign in"}
       </button>
+      {error && <p className="text-sm text-red-500">{error}</p>}
     </form>
   );
-}
-
-async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-  e.preventDefault();
-  const form = e.currentTarget;
-  const email = (form.elements.namedItem("email") as HTMLInputElement).value;
-  const password = (form.elements.namedItem("password") as HTMLInputElement).value;
-
-  const { authClient } = await import("#/lib/auth-client");
-  const { error } = await authClient.signIn.email({
-    email,
-    password,
-    callbackURL: "/dashboard",
-  });
-
-  if (error) {
-    alert(error.message ?? "Sign in failed");
-  }
 }

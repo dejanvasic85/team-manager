@@ -25,10 +25,15 @@ function DashboardPage() {
             </h1>
           </div>
           <button
+            type="button"
             className="button-ghost rounded-lg px-4 py-2 text-sm font-medium"
             onClick={async () => {
-              await authClient.signOut();
-              void router.navigate({ to: "/" });
+              try {
+                await authClient.signOut();
+                void router.navigate({ to: "/" });
+              } catch (err) {
+                console.error("Sign out failed", err);
+              }
             }}
           >
             Sign out
