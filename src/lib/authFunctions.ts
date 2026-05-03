@@ -14,7 +14,7 @@ export const ensureSession = createServerFn({ method: "GET" }).handler(async () 
   const session = await auth.api.getSession({ headers });
 
   if (!session) {
-    throw new Error("Unauthorized");
+    throw new Response("Unauthorized", { status: 401, statusText: "Unauthorized" });
   }
 
   return session;

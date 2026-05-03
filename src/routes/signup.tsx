@@ -1,4 +1,6 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
+import { useState } from "react";
+
 import { getSession } from "#/lib/authFunctions";
 
 export const Route = createFileRoute("/signup")({
@@ -34,6 +36,36 @@ function SignupPage() {
 }
 
 function SignupForm() {
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setError(null);
+    setPending(true);
+    const form = e.currentTarget;
+    const name = (form.elements.namedItem("name") as HTMLInputElement).value;
+    const email = (form.elements.namedItem("email") as HTMLInputElement).value;
+    const password = (form.elements.namedItem("password") as HTMLInputElement).value;
+
+    try {
+      const { authClient } = await import("#/lib/auth-client");
+      const { error: authError } = await authClient.signUp.email({
+        name,
+        email,
+        password,
+        callbackURL: "/dashboard",
+      });
+      if (authError) {
+        setError(authError.message ?? "Sign up failed");
+      }
+    } catch {
+      setError("Sign up failed. Please try again.");
+    } finally {
+      setPending(false);
+    }
+  }
+
   return (
     <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
       <div className="flex flex-col gap-1.5">
@@ -104,30 +136,13 @@ function SignupForm() {
       </div>
       <button
         type="submit"
-        className="button-cta mt-2 rounded-lg px-4 py-2.5 text-sm font-semibold"
+        disabled={pending}
+        aria-busy={pending}
+        className="button-cta mt-2 rounded-lg px-4 py-2.5 text-sm font-semibold disabled:opacity-60"
       >
-        Create account
+        {pending ? "Creating account..." : "Create account"}
       </button>
+      {error && <p className="text-sm text-red-500">{error}</p>}
     </form>
   );
-}
-
-async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-  e.preventDefault();
-  const form = e.currentTarget;
-  const name = (form.elements.namedItem("name") as HTMLInputElement).value;
-  const email = (form.elements.namedItem("email") as HTMLInputElement).value;
-  const password = (form.elements.namedItem("password") as HTMLInputElement).value;
-
-  const { authClient } = await import("#/lib/auth-client");
-  const { error } = await authClient.signUp.email({
-    name,
-    email,
-    password,
-    callbackURL: "/dashboard",
-  });
-
-  if (error) {
-    alert(error.message ?? "Sign up failed");
-  }
 }
