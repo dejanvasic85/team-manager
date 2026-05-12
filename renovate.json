@@ -1,6 +1,8 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended", ":timezone(Australia/Melbourne)", ":renovatePrefix"],
+  "rangeStrategy": "pin",
+  "minimumReleaseAge": "7 days",
   "schedule": "before 5am every weekday",
   "automerge": false,
   "labels": ["dependencies"],
@@ -12,7 +14,7 @@
   },
   "packageRules": [
     {
-      "description": "Automerge patch and minor updates",
+      "description": "Automerge patch and minor updates after stability period",
       "matchUpdateTypes": ["minor", "patch"],
       "automerge": true
     },
@@ -21,7 +23,8 @@
       "matchPackageNames": ["node", "@types/node"],
       "groupName": "node and types",
       "matchManagers": ["volta", "npm"],
-      "allowedVersions": "/^(20|22|24|26|28|30|32|34|36|38|40)\\./"
+      "allowedVersions": "/^(20|22|24|26|28|30|32|34|36|38|40)\\./",
+      "minimumReleaseAge": "7 days"
     }
   ]
 }
